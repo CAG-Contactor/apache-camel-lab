@@ -8,3 +8,4 @@
 * Camel Simple: http://camel.apache.org/simple.html
 * Camel test: http://camel.apache.org/testing.html
 * Camel properties: http://camel.apache.org/properties.html
+* Camel predicate: http://camel.apache.org/predicate.html
