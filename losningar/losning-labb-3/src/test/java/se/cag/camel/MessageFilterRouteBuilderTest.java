@@ -35,9 +35,9 @@ public class MessageFilterRouteBuilderTest extends CamelTestSupport {
             }
         });
         context.start();
-//        assertTrue(notifyBuilder.matchesMockWaitTime());
         Thread.sleep(2000);
         template.sendBodyAndHeader("direct:message", "fluff", "test", "false");
+//        assertTrue(notifyBuilder.matchesMockWaitTime());
         assertTrue("fluff".equals(mockBean.body));
     }
 

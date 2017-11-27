@@ -7,7 +7,7 @@ public class UppercaseProcessor implements Processor{
 
     public void process(Exchange exchange) throws Exception {
 //        Hämta ut filens innehåll body-delen av exchange
-        String originalFileContent = (String) exchange.getIn().getBody(String.class);
+        String originalFileContent = exchange.getIn().getBody(String.class);
 //        Gör om innehållet till stora bokstäver
         String upperCaseFileContent = originalFileContent.toUpperCase();
 //        Ersätt innehållet i body med det nya

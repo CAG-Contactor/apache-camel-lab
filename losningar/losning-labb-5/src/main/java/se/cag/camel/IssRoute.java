@@ -2,6 +2,7 @@ package se.cag.camel;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 import se.cag.camel.processors.IssPositionProcessor;
 import se.cag.camel.processors.PositionToPlaceProcessor;
@@ -27,16 +28,19 @@ public class IssRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        errorHandler(defaultErrorHandler().maximumRedeliveries(3).maximumRedeliveryDelay(1000));
 
-        onException(com.fasterxml.jackson.core.JsonParseException.class).logExhaustedMessageBody(true).log(LoggingLevel.ERROR, "JsonParseException: The site is probably down or the Json format has changed. Check the Uri response. Error message: ${exception.message}").handled(true);
-        onException(com.fasterxml.jackson.databind.JsonMappingException.class).logExhaustedMessageBody(true).log(LoggingLevel.ERROR, "JsonMappingException: The site is probably down or the Json format has changed. Check the Uri response. Error message: ${exception.message}").handled(true);
-
+//        onException(com.fasterxml.jackson.core.JsonParseException.class).logExhaustedMessageBody(true).log(LoggingLevel.ERROR, "JsonParseException: The site is probably down or the Json format has changed. Check the Uri response. Error message: ${exception.message}").handled(true);
+//        onException(com.fasterxml.jackson.databind.JsonMappingException.class).logExhaustedMessageBody(true).log(LoggingLevel.ERROR, "JsonMappingException: The site is probably down or the Json format has changed. Check the Uri response. Error message: ${exception.message}").handled(true);
+//        getContext().getProperties().put("CamelJacksonEnableTypeConverter", "true");
+//        // allow Jackson json to convert to pojo types also
+//        getContext().getProperties().put("CamelJacksonTypeConverterToPojo", "true");
 
         from("timer:foo?period=15000")
                 .to("http4://api.open-notify.org/iss-now.json").streamCaching()
 //                .recipientList(simple("http4://api.open-notify.org/iss-now.json"), "false")
             .log("rest headers: ${headers}")
-//                .unmarshal().json(JsonLibrary.Jackson, OpenNotifyIssPositionBean.class)
+                .unmarshal().json(JsonLibrary.Jackson).log("Got JSON")
                 //                .process(new IssPositionProcessor())
                 .process(issPositionProcessor)
                 .log(LoggingLevel.INFO,"${header.latitude}")

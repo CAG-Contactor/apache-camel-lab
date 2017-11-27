@@ -17,6 +17,7 @@
         <module>hawtio-debug</module>
         <module>losningar</module>
         <module>ovningar</module>
+        <module>diverse</module>
     </modules>
 
     <parent>

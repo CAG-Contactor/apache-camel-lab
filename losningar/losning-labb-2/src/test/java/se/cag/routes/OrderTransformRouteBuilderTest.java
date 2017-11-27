@@ -25,17 +25,17 @@ public class OrderTransformRouteBuilderTest extends CamelTestSupport {
 
     RouteDefinition processorTransformer = context.getRouteDefinition("ProcessorTransformer");
     RouteDefinition beanTransformer = context.getRouteDefinition("BeanTransformer");
-    final BodyChecker prosessorChecker = new BodyChecker();
+    final BodyChecker processorChecker = new BodyChecker();
 
     processorTransformer.adviceWith(context, new AdviceWithRouteBuilder() {
       @Override
       public void configure() throws Exception {
-        weaveAddLast().bean(prosessorChecker, "checkBody");
+        weaveAddLast().bean(processorChecker, "checkBody");
       }
     });
-
+    context.start();
     template.sendBody("direct:transformOrder", null);
-    assertTrue(prosessorChecker.bean != null);
+    assertTrue(processorChecker.bean != null);
 
     final BodyChecker beanChecker = new BodyChecker();
     beanTransformer.adviceWith(context, new AdviceWithRouteBuilder() {
